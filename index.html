@@ -28,7 +28,7 @@
       display: inline-block;
       margin: 10px;
     }
-    .rotate-button, .remove-button {
+    .rotate-button, .remove-button, .prev-page-button, .next-page-button {
       position: absolute;
       top: 5px;
       padding: 5px;
@@ -42,6 +42,12 @@
     }
     .remove-button {
       right: 100px;
+    }
+    .prev-page-button {
+      right: 195px;
+    }
+    .next-page-button {
+      right: 290px;
     }
     #pdfViewer {
       margin-top: 20px;
@@ -62,11 +68,6 @@
     <span class="input-group-text" id="basic-addon1">New Filename</span>
     <input type="text" class="form-control" id="filenameInput" placeholder="Enter filename">
     <button id="downloadButton" class="btn btn-success">Download Edited PDF</button>
-  </div>
-
-  <div id="navigationButtons" class="mb-3">
-    <button id="prevPageButton" class="btn btn-primary nav-button">Previous Page</button>
-    <button id="nextPageButton" class="btn btn-primary nav-button">Next Page</button>
   </div>
 
   <div id="thumbnails"></div>
@@ -197,6 +198,34 @@
             removePage(pageNum);
           };
 
+          // Add previous page button
+          var prevPageButton = container.querySelector('.prev-page-button');
+          if (!prevPageButton) {
+            prevPageButton = document.createElement('button');
+            prevPageButton.className = 'prev-page-button btn btn-secondary';
+            prevPageButton.textContent = 'Previous Page';
+            container.appendChild(prevPageButton);
+          }
+          prevPageButton.onclick = function() {
+            if (currentPageNum > 1) {
+              displayPage(currentPageNum - 1);
+            }
+          };
+
+          // Add next page button
+          var nextPageButton = container.querySelector('.next-page-button');
+          if (!nextPageButton) {
+            nextPageButton = document.createElement('button');
+            nextPageButton.className = 'next-page-button btn btn-secondary';
+            nextPageButton.textContent = 'Next Page';
+            container.appendChild(nextPageButton);
+          }
+          nextPageButton.onclick = function() {
+            if (currentPageNum < pdfDoc.numPages) {
+              displayPage(currentPageNum + 1);
+            }
+          };
+
           // Store rotation data for the page
           rotationData[pageNum] = rotation;
 
@@ -288,19 +317,6 @@
       link.href = downloadUrl;
       link.download = filename;
       link.click();
-    });
-
-    // Add event listeners for navigation buttons
-    document.getElementById('prevPageButton').addEventListener('click', function() {
-      if (currentPageNum > 1) {
-        displayPage(currentPageNum - 1);
-      }
-    });
-
-    document.getElementById('nextPageButton').addEventListener('click', function() {
-      if (currentPageNum < pdfDoc.numPages) {
-        displayPage(currentPageNum + 1);
-      }
     });
   </script>
 </body>
